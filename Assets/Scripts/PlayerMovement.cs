@@ -3,55 +3,43 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-//copied from tilemap map generator script
 public class PlayerMovement : MonoBehaviour
 {
-    public Tilemap tilemap;
-    public Tile playerTile;
-    private Vector3Int playerTilePosition;
+    public Rigidbody2D rb;
+    public float moveSpeed = 5f;
+    private Vector2 movement;
     private bool isMoving = false;
-
-    private TileMap tileMapLoaderScript;
 
     void Start()
     {
-        tileMapLoaderScript = GameObject.Find("TileMapLoaderObject").GetComponent<TileMap>();
-        playerTilePosition = tileMapLoaderScript.GetPlayerTilePosition();
+        if (rb == null)
+        {
+            if(rb == null)
+            {
+                rb = GetComponent<Rigidbody2D>();
+            }
+        }
     }
 
     void Update()
     {
-        if (!isMoving)
-        {
-            if (Input.GetKey(KeyCode.W)) TryMove(Vector3Int.up);
-            if (Input.GetKey(KeyCode.S)) TryMove(Vector3Int.down);
-            if (Input.GetKey(KeyCode.A)) TryMove(Vector3Int.left);
-            if (Input.GetKey(KeyCode.D)) TryMove(Vector3Int.right);
-        }
-    }
+        float moveX = Input.GetAxisRaw("Horizontal");
+        float moveY = Input.GetAxisRaw("Vertical");
 
-    void TryMove(Vector3Int direction)
-    {
-        Vector3Int targetTilePosition = playerTilePosition + direction;
-        TileBase targetTile = tilemap.GetTile(targetTilePosition);
-        if (targetTile != null && targetTile != tileMapLoaderScript.wallTile && targetTile != tileMapLoaderScript.chestTile && targetTile != tileMapLoaderScript.doorTile)
+        movement = new Vector2(moveX, moveY).normalized;
+
+        if (movement != Vector2.zero)
         {
             isMoving = true;
-            tilemap.SetTile(playerTilePosition, tileMapLoaderScript.floorTile);
-            tilemap.SetTile(targetTilePosition, playerTile);
-            playerTilePosition = targetTilePosition;
-            tileMapLoaderScript.SetPlayerTilePosition(playerTilePosition);
-            StartCoroutine(MovementDelay());
         }
         else
         {
-            Debug.Log("You can’t walk there!");
+            isMoving = false;
         }
     }
 
-    IEnumerator MovementDelay()
+    private void FixedUpdate()
     {
-        yield return new WaitForSeconds(0.2f);
-        isMoving = false;
+        rb.velocity = movement * moveSpeed;
     }
 }

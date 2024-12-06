@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class GaurdDetection : MonoBehaviour
 {
-
+    /*
     private void Update()
     {
         float alignment = Vector2.Dot(vectorA, vectorB);
@@ -22,5 +22,5 @@ public class GaurdDetection : MonoBehaviour
     public bool InFieldOfView(Transform target, float viewAngle)   // why view angle?
     {
 
-    }
+    } */
 }
