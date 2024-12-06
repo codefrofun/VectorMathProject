@@ -6,18 +6,16 @@ using UnityEngine.Tilemaps;
 public class PlayerMovement : MonoBehaviour
 {
     public Rigidbody2D rb;
-    public float moveSpeed = 5f;
+    public float moveSpeed = 3f;
     private Vector2 movement;
     private bool isMoving = false;
 
+
     void Start()
     {
-        if (rb == null)
+        if(rb == null)
         {
-            if(rb == null)
-            {
-                rb = GetComponent<Rigidbody2D>();
-            }
+            rb = GetComponent<Rigidbody2D>();
         }
     }
 
@@ -41,5 +39,17 @@ public class PlayerMovement : MonoBehaviour
     private void FixedUpdate()
     {
         rb.velocity = movement * moveSpeed;
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("walls"))
+        {
+            Debug.Log("Collided with wall");
+        }
+        if (collision.gameObject.CompareTag("door"))
+        {
+            Debug.Log("Collided with door");
+        }
     }
 }
