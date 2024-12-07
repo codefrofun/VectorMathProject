@@ -6,16 +6,16 @@ using UnityEngine.SceneManagement;
 public class DoorCollision : MonoBehaviour
 {
     public GameManager gameManager;
-    public keyPickup keyPickup;
+    public keyPickup key;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Player"))
         {
+            Debug.Log("You opened the door!");
             if (gameManager.HasKey)
-            {
+            { 
                 OpenDoor();
-                keyPickup.DestroyKey();
             }
             else
             {
@@ -24,10 +24,10 @@ public class DoorCollision : MonoBehaviour
         }
     }
 
-    private void OpenDoor()
+    private IEnumerator OpenDoor()
     {
-        Debug.Log("You opened the door!");
-        gameObject.SetActive(false);
+        key.DestroyKey();
+        yield return new WaitForSeconds(3f);
         SceneManager.LoadScene("WinScene");
     }
 }

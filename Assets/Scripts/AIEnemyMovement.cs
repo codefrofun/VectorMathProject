@@ -1,7 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class AIEnemyMovement : MonoBehaviour
 {
@@ -18,6 +16,9 @@ public class AIEnemyMovement : MonoBehaviour
     private bool isChasing = false;
     private bool isAttacking = false;
     private bool isPatrolling = false;
+
+    public UiController gameOverUIController;
+    public Button restartButton;
 
     private void Start()
     {
@@ -107,10 +108,13 @@ public class AIEnemyMovement : MonoBehaviour
     void AttackPlayer()
     {
         Debug.Log("Attacking player");
-        //You have been caught! message displayed
-        //restart button
-        // reset player to start psoition (in dungeon)
-        movement = Vector2.zero;
+        float distanceToPlayer = (player.position - transform.position).magnitude;
+        if (distanceToPlayer <= 0.1f)
+        {
+            gameOverUIController.ShowGameOver();
+            movement = Vector2.zero;
+            restartButton.gameObject.SetActive(true);
+        }
     }
 
 
@@ -123,7 +127,6 @@ public class AIEnemyMovement : MonoBehaviour
             if (distanceToPlayer <= attackRange)
             {
                 Debug.Log("Enemy collided with player and is now attacking");
-                // attack
             }
         }
     }
