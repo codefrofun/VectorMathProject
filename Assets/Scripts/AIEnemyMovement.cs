@@ -93,6 +93,8 @@ public class AIEnemyMovement : MonoBehaviour
     void ChasePLayer()
     {
         Vector2 direction = (player.position - transform.position).normalized;
+        Debug.DrawRay(transform.position, direction * 2f, Color.green);
+        movement = direction * moveSpeed;
 
         float dotProduct = Vector2.Dot(transform.up, direction);
 
@@ -112,8 +114,26 @@ public class AIEnemyMovement : MonoBehaviour
     }
 
 
-    private void OnTriggerEnter2D(Collider2D other)
+    private void OnTriggerStay2D(Collider2D other)
     {
-        Debug.Log("Enemy collided with player and is now attacking");
+        if (other.CompareTag("Player"))
+        {
+            float distanceToPlayer = (other.transform.position - transform.position).magnitude;
+
+            if (distanceToPlayer <= attackRange)
+            {
+                Debug.Log("Enemy collided with player and is now attacking");
+                // attack
+            }
+        }
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (player != null)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawLine(transform.position, player.position);
+        }
     }
 }
